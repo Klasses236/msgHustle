@@ -9,7 +9,8 @@ import Input from '@/shared/ui/Input';
 import styles from './styles.module.scss';
 
 interface JoinPageProps {
-  onJoin: (userId: string, chatId: string) => void;
+  onJoin: (userId: string, chatId: string, username: string) => void;
+  onClose?: () => void;
 }
 
 interface JoinFormData {
@@ -17,7 +18,7 @@ interface JoinFormData {
   nickname: string;
 }
 
-const JoinPage: React.FC<JoinPageProps> = ({ onJoin }) => {
+const JoinPage: React.FC<JoinPageProps> = ({ onJoin, onClose }) => {
   const { control, handleSubmit, formState: { errors } } = useForm<JoinFormData>();
   const [joinChat, { isLoading }] = useJoinChatMutation();
   const defaultNickname = (() => {
@@ -42,7 +43,8 @@ const JoinPage: React.FC<JoinPageProps> = ({ onJoin }) => {
         chatId: result.chatId,
       });
       toast.success('Успешное присоединение к чату!');
-      onJoin(result.userId, result.chatId);
+      onJoin(result.userId, result.chatId, nickname);
+      if (onClose) onClose();
     } catch (error: unknown) {
       console.error('Error joining chat:', error);
       toast.error(getApiErrorMessage(error));

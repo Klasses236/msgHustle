@@ -1,19 +1,32 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import Button from '../Button/Button';
+import Modal from '../Modal';
+import JoinPage from '@/pages/join/JoinPage';
 import styles from './styles.module.scss';
 
 interface LayoutProps {
   children: React.ReactNode;
   username: string;
   onLogout?: () => void;
+  onJoin?: (userId: string, chatId: string, username: string) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, username, onLogout }) => {
-  const navigate = useNavigate();
+const Layout: React.FC<LayoutProps> = ({ children, username, onLogout, onJoin }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleJoinChat = () => {
-    navigate('/join');
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleJoin = (userId: string, chatId: string, username: string) => {
+    if (onJoin) {
+      onJoin(userId, chatId, username);
+    }
+    setIsModalOpen(false);
   };
 
   return (
@@ -55,6 +68,10 @@ const Layout: React.FC<LayoutProps> = ({ children, username, onLogout }) => {
           {children}
         </main>
       </div>
+
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <JoinPage onJoin={handleJoin} onClose={handleCloseModal} />
+      </Modal>
     </div>
   );
 };

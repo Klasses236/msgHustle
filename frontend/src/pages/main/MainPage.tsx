@@ -35,6 +35,12 @@ const MainPage = () => {
     navigate('/login');
   };
 
+  const handleJoin = (userId: string, chatId: string, username: string) => {
+    setUserId(userId);
+    setChatId(chatId);
+    setUsername(username);
+  };
+
   // Для новостей используем специальный компонент или модифицированный Chat
   const renderChat = () => {
     if (chatId === defaultChatId) {
@@ -45,7 +51,7 @@ const MainPage = () => {
   };
 
   return (
-    <Layout username={username} onLogout={handleLogout}>
+    <Layout username={username} onLogout={handleLogout} onJoin={handleJoin}>
       {renderChat()}
     </Layout>
   );
