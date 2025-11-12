@@ -9,7 +9,7 @@ const LoginPage = () => {
   const [isRegister, setIsRegister] = useState(false);
 
   const handleLogin = () => {
-    navigate('/join');
+    navigate('/main');
   };
 
   const handleRegister = () => {

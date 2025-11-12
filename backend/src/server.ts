@@ -6,6 +6,7 @@ import authRouter from './routes/auth';
 import usersRouter from './routes/users';
 import messagesRouter from './routes/messages';
 import chatsRouter from './routes/chats';
+import newsRouter from './routes/news';
 import { authenticateToken } from './middleware/auth';
 
 const app = express(); // test
@@ -20,6 +21,7 @@ app.use('/api/auth', authRouter); // auth routes
 app.use('/api/users', authenticateToken, usersRouter); // protected user routes
 app.use('/api/messages', authenticateToken, messagesRouter);
 app.use('/api/chats', authenticateToken, chatsRouter);
+app.use('/api/news', newsRouter); // news routes
 
 // Health check
 app.get('/api/health', (req, res) => {
