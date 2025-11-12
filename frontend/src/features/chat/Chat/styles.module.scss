@@ -1,0 +1,18 @@
+@import '@/variables.scss';
+
+.chat {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-background;
+
+  .title {
+    color: $color-text;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: $spacing-responsive-md;
+    border-bottom: 1px solid $color-border;
+  }
+}

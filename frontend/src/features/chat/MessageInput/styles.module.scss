@@ -1,0 +1,12 @@
+@import '@/variables.scss';
+
+.message-input {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+  padding: $spacing-responsive-sm;
+
+  .textarea {
+    flex: 1;
+  }
+}

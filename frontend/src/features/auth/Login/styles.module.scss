@@ -1,0 +1,35 @@
+@import '@/variables.scss';
+
+.login {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  padding: $spacing-responsive-lg;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+
+  .title {
+    text-align: center;
+    color: $color-text;
+    margin-bottom: $spacing-responsive-md;
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-responsive-md;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .label {
+    margin-bottom: $spacing-sm;
+    font-weight: bold;
+    color: #cccccc;
+  }
+}

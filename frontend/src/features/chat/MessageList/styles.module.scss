@@ -1,0 +1,42 @@
+@import '@/variables.scss';
+
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid $color-border;
+  padding: $spacing-responsive-sm;
+  background-color: #2a2a2a;
+}
+
+.message {
+  margin-bottom: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  border-radius: 8px;
+  min-width: clamp(200px, 50vw, 300px);
+  max-width: 70%;
+  width: fit-content;
+
+  &.sent {
+    background-color: #4f4f4f;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  &.received {
+    background-color: #3c3c3c;
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .content {
+    // No specific styles, but class added for consistency
+  }
+
+  .timestamp {
+    font-size: 0.8em;
+    color: #6c6c6c;
+    margin-top: $spacing-xs;
+  }
+}

@@ -1,0 +1,18 @@
+// Spacing variables
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-xxl: 48px;
+
+// Responsive spacing using clamp
+$spacing-responsive-sm: clamp(8px, 2vw, 16px);
+$spacing-responsive-md: clamp(16px, 4vw, 32px);
+$spacing-responsive-lg: clamp(24px, 6vw, 48px);
+
+// Colors
+$color-background: #1a1a1a;
+$color-text: #ffffff;
+$color-border: #333;
+$color-accent: #646cff;

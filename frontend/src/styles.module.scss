@@ -1,0 +1,21 @@
+@import './variables.scss';
+
+.App {
+  width: 100%;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: $color-background;
+  color: $color-text;
+}
+
+.notLoggedIn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.loggedIn {
+  width: 100%;
+  height: 100vh;
+}
