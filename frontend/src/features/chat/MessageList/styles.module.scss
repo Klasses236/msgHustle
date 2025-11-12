@@ -1,11 +1,11 @@
-@import '@/variables.scss';
+@use '@/variables.scss' as *;
 
 .message-list {
   flex: 1;
   overflow-y: auto;
   border: 1px solid $color-border;
   padding: $spacing-responsive-sm;
-  background-color: #2a2a2a;
+  background-color: $color-secondary-bg;
 }
 
 .message {
@@ -17,17 +17,17 @@
   width: fit-content;
 
   &.sent {
-    background-color: #4f4f4f;
-    color: white;
+    background-color: $color-sent-message;
+    color: $color-text;
     margin-left: auto;
     text-align: right;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 4px $color-shadow;
   }
 
   &.received {
-    background-color: #3c3c3c;
-    color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background-color: $color-received-message;
+    color: $color-text;
+    box-shadow: 0 2px 4px $color-shadow;
   }
 
   .content {
@@ -36,7 +36,7 @@
 
   .timestamp {
     font-size: 0.8em;
-    color: #6c6c6c;
+    color: $color-timestamp;
     margin-top: $spacing-xs;
   }
 }

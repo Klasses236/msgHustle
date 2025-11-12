@@ -1,18 +1,20 @@
+@use '@/variables.scss' as *;
+
 .input {
   padding: 10px;
-  border: 1px solid #555;
+  border: 1px solid $color-input-border;
   border-radius: 4px;
   font-size: 16px;
-  background-color: #3a3a3a;
-  color: #ffffff;
+  background-color: $color-tertiary-bg;
+  color: $color-text;
 
   &:focus {
     outline: none;
-    border-color: #777;
+    border-color: $color-input-focus-border;
   }
 
   &::placeholder {
-    color: #cccccc;
+    color: $color-muted-text;
   }
 
   &.textarea {

@@ -1,4 +1,4 @@
-@import '@/variables.scss';
+@use '@/variables.scss' as *;
 
 .message-input {
   display: flex;

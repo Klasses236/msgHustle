@@ -1,3 +1,5 @@
+@use '@/variables.scss' as *;
+
 .button {
   border: none;
   border-radius: 4px;
@@ -10,52 +12,52 @@
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 
   &.red {
-    background-color: #4a4a4a;
-    color: white;
+    background-color: $color-button-bg;
+    color: $color-text;
 
     &:focus {
-      background-color: rgba(153, 0, 0, 0.5);
+      background-color: $color-red-focus;
       outline: none;
     }
 
     &:hover {
-      background-color: #990000;
-      box-shadow: 0 4px 15px rgba(153, 0, 0, 0.6),
-        0 0 30px rgba(153, 0, 0, 0.4);
+      background-color: $color-button-hover;
+      box-shadow: 0 4px 15px $color-red-shadow,
+        0 0 30px $color-red-glow;
       transform: translateY(-2px);
     }
   }
 
   &.green {
-    background-color: #4a4a4a;
-    color: white;
+    background-color: $color-button-bg;
+    color: $color-text;
 
     &:focus {
-      background-color: rgba(0, 153, 0, 0.5);
+      background-color: $color-green-focus;
       outline: none;
     }
 
     &:hover {
-      background-color: #009900;
-      box-shadow: 0 4px 15px rgba(0, 153, 0, 0.6),
-        0 0 30px rgba(0, 153, 0, 0.4);
+      background-color: $color-button-green;
+      box-shadow: 0 4px 15px $color-green-shadow,
+        0 0 30px $color-green-glow;
       transform: translateY(-2px);
     }
   }
 
   &.blue {
-    background-color: #646cff;
-    color: white;
+    background-color: $color-accent;
+    color: $color-text;
 
     &:focus {
-      background-color: rgba(83, 91, 242, 0.5);
+      background-color: $color-blue-focus;
       outline: none;
     }
 
     &:hover {
-      background-color: #535bf2;
-      box-shadow: 0 4px 15px rgba(100, 108, 255, 0.6),
-        0 0 30px rgba(100, 108, 255, 0.4);
+      background-color: $color-button-blue;
+      box-shadow: 0 4px 15px $color-blue-shadow,
+        0 0 30px $color-blue-glow;
       transform: translateY(-2px);
     }
   }

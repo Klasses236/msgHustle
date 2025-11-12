@@ -1,4 +1,4 @@
-@import '@/variables.scss';
+@use '@/variables.scss' as *;
 
 .login {
   max-width: 500px;
@@ -7,7 +7,7 @@
   padding: $spacing-responsive-lg;
   border: 1px solid $color-border;
   border-radius: 8px;
-  background-color: #2a2a2a;
+  background-color: $color-secondary-bg;
 
   .title {
     text-align: center;
@@ -30,6 +30,6 @@
   .label {
     margin-bottom: $spacing-sm;
     font-weight: bold;
-    color: #cccccc;
+    color: $color-muted-text;
   }
 }
