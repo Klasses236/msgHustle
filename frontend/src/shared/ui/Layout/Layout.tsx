@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '../Button/Button';
 import Modal from '../Modal';
-import JoinPage from '@/pages/join/JoinPage';
+import JoinChat from '@/features/chat/JoinChat/JoinChat';
 import styles from './styles.module.scss';
 
 interface LayoutProps {
@@ -93,7 +93,7 @@ const Layout: React.FC<LayoutProps> = ({
       </div>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
-        <JoinPage onJoin={handleJoin} onClose={handleCloseModal} />
+        <JoinChat onJoin={handleJoin} onClose={handleCloseModal} />
       </Modal>
     </div>
   );

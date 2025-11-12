@@ -8,7 +8,7 @@ import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import styles from './styles.module.scss';
 
-interface JoinPageProps {
+interface JoinChatProps {
   onJoin: (userId: string, chatId: string, username: string) => void;
   onClose?: () => void;
 }
@@ -18,8 +18,12 @@ interface JoinFormData {
   nickname: string;
 }
 
-const JoinPage: React.FC<JoinPageProps> = ({ onJoin, onClose }) => {
-  const { control, handleSubmit, formState: { errors } } = useForm<JoinFormData>();
+const JoinChat: React.FC<JoinChatProps> = ({ onJoin, onClose }) => {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<JoinFormData>();
   const [joinChat, { isLoading }] = useJoinChatMutation();
   const defaultNickname = (() => {
     const user = localStorage.getItem('user');
@@ -56,11 +60,13 @@ const JoinPage: React.FC<JoinPageProps> = ({ onJoin, onClose }) => {
       <h1 className={styles.title}>Присоединиться к чату</h1>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="chatKey">Ключ чата:</label>
+          <label className={styles.label} htmlFor="chatKey">
+            Ключ чата:
+          </label>
           <Controller
             name="chatKey"
             control={control}
-            rules={{ required: "Ключ чата обязателен" }}
+            rules={{ required: 'Ключ чата обязателен' }}
             render={({ field }) => (
               <Input
                 type="text"
@@ -72,10 +78,14 @@ const JoinPage: React.FC<JoinPageProps> = ({ onJoin, onClose }) => {
               />
             )}
           />
-          {errors.chatKey && <span className={styles.error}>{errors.chatKey.message}</span>}
+          {errors.chatKey && (
+            <span className={styles.error}>{errors.chatKey.message}</span>
+          )}
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="nickname">Никнейм (опционально):</label>
+          <label className={styles.label} htmlFor="nickname">
+            Никнейм (опционально):
+          </label>
           <Controller
             name="nickname"
             control={control}
@@ -102,4 +112,4 @@ const JoinPage: React.FC<JoinPageProps> = ({ onJoin, onClose }) => {
   );
 };
 
-export default JoinPage;
+export default JoinChat;
