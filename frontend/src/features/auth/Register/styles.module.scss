@@ -1,6 +1,6 @@
 @use '@/variables.scss' as *;
 
-.login {
+.register {
   max-width: 500px;
   width: 100%;
   margin: 0 auto;
@@ -31,5 +31,16 @@
     margin-bottom: $spacing-sm;
     font-weight: bold;
     color: $color-muted-text;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: $spacing-xs;
+  }
+
+  .linkContainer {
+    text-align: center;
+    margin-top: $spacing-sm;
   }
 }

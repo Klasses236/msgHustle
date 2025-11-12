@@ -2,9 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import authRouter from './routes/auth';
 import usersRouter from './routes/users';
 import messagesRouter from './routes/messages';
 import chatsRouter from './routes/chats';
+import { authenticateToken } from './middleware/auth';
 
 const app = express(); // test
 const PORT = process.env.PORT || 3001;
@@ -14,9 +16,10 @@ app.use(cors({ origin: '*', methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 app.use(express.json());
 
 // Routes
-app.use('/api/users', usersRouter);
-app.use('/api/messages', messagesRouter);
-app.use('/api/chats', chatsRouter);
+app.use('/api/auth', authRouter); // auth routes
+app.use('/api/users', authenticateToken, usersRouter); // protected user routes
+app.use('/api/messages', authenticateToken, messagesRouter);
+app.use('/api/chats', authenticateToken, chatsRouter);
 
 // Health check
 app.get('/api/health', (req, res) => {

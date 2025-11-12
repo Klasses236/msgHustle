@@ -1,5 +1,10 @@
 @use '@/variables.scss' as *;
 
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .input {
   padding: 10px;
   border: 1px solid $color-input-border;
@@ -22,5 +27,23 @@
     height: 78px;
     line-height: 1.4;
     overflow-y: auto;
+  }
+
+  &.error {
+    border-color: #ff4d4f;
+  }
+}
+
+.errorText {
+  color: #ff4d4f;
+  font-size: 14px;
+  line-height: 18px;
+  margin-top: 4px;
+  min-height: 18px; // Резервируем место для ошибки
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  &:not(:empty) {
+    opacity: 1;
   }
 }

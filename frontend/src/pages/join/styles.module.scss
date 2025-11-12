@@ -1,6 +1,6 @@
 @use '@/variables.scss' as *;
 
-.login {
+.join {
   max-width: 500px;
   width: 100%;
   margin: 0 auto;
@@ -19,7 +19,7 @@
   .form {
     display: flex;
     flex-direction: column;
-    gap: $spacing-responsive-sm;
+    gap: $spacing-responsive-md;
   }
 
   .field {
@@ -31,5 +31,11 @@
     margin-bottom: $spacing-sm;
     font-weight: bold;
     color: $color-muted-text;
+  }
+
+  .error {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: $spacing-xs;
   }
 }

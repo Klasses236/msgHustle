@@ -1,88 +1,91 @@
 import React from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import { useJoinChatMutation } from '@/app/api/chatsSlice';
+import { useLoginMutation } from '@/app/api/authSlice';
 import { getApiErrorMessage } from '@/shared/utils/apiErrorUtils';
-import { saveChatSession } from '@/shared/utils/localStorageService';
 import { toast } from 'react-toastify';
 import Button from '@/shared/ui/Button';
 import Input from '@/shared/ui/Input';
 import styles from './styles.module.scss';
 
 interface LoginProps {
-  onLogin: (userId: string, chatId: string) => void;
+  onLogin: () => void;
+  onSwitchToRegister: () => void;
 }
 
 interface LoginFormData {
-  username: string;
-  chatKey: string;
+  email: string;
+  password: string;
 }
 
-const Login: React.FC<LoginProps> = ({ onLogin }) => {
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
-  const [joinChat, { isLoading }] = useJoinChatMutation();
+const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
+  const { control, handleSubmit, formState: { errors }, trigger } = useForm<LoginFormData>();
+  const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (data: LoginFormData) => {
-    if (data.username.trim() && data.chatKey.trim()) {
-      try {
-        const result = await joinChat({
-          username: data.username.trim(),
-          chatKey: data.chatKey.trim(),
-        }).unwrap();
-        saveChatSession({
-          username: data.username.trim(),
-          userId: result.userId,
-          chatId: result.chatId,
-        });
-        toast.success('Успешный вход в чат!');
-        onLogin(result.userId, result.chatId);
-      } catch (error: unknown) {
-        console.error('Error joining chat:', error);
-        toast.error(getApiErrorMessage(error));
-      }
+    try {
+      const result = await login({
+        email: data.email.trim(),
+        password: data.password,
+      }).unwrap();
+      localStorage.setItem('accessToken', result.accessToken);
+      localStorage.setItem('refreshToken', result.refreshToken);
+      localStorage.setItem('user', JSON.stringify(result.user));
+      toast.success('Успешный вход!');
+      onLogin();
+    } catch (error: unknown) {
+      console.error('Error logging in:', error);
+      toast.error(getApiErrorMessage(error));
     }
   });
 
   return (
     <div className={styles.login}>
-      <h1 className={styles.title}>Вход в чат</h1>
+      <h1 className={styles.title}>Вход</h1>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="username">Ваше имя:</label>
+          <label className={styles.label} htmlFor="email">Email:</label>
           <Controller
-            name="username"
+            name="email"
             control={control}
-            rules={{ required: "Имя обязательно" }}
+            rules={{
+              required: "Email обязателен",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Неверный формат email"
+              }
+            }}
             render={({ field }) => (
               <Input
                 type="text"
-                id="username"
+                id="email"
                 value={field.value || ''}
                 onChange={field.onChange}
-                placeholder="Введите ваше имя"
+                onBlur={() => trigger('email')}
+                placeholder="Введите email"
                 required
+                error={errors.email?.message}
               />
             )}
           />
-          {errors.username && <span className={styles.error}>{errors.username.message}</span>}
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="chatKey">Ключ чата:</label>
+          <label className={styles.label} htmlFor="password">Пароль:</label>
           <Controller
-            name="chatKey"
+            name="password"
             control={control}
-            rules={{ required: "Ключ чата обязателен" }}
+            rules={{ required: "Пароль обязателен" }}
             render={({ field }) => (
               <Input
-                type="text"
-                id="chatKey"
+                type="password"
+                id="password"
                 value={field.value || ''}
                 onChange={field.onChange}
-                placeholder="Введите ключ чата"
+                placeholder="Введите пароль"
                 required
+                error={errors.password?.message}
               />
             )}
           />
-          {errors.chatKey && <span className={styles.error}>{errors.chatKey.message}</span>}
         </div>
         <Button
           text={isLoading ? 'Вход...' : 'Войти'}
@@ -90,6 +93,13 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           size="medium"
           type="submit"
           disabled={isLoading}
+        />
+        <Button
+          text="Регистрация"
+          color="blue"
+          size="medium"
+          type="button"
+          onClick={onSwitchToRegister}
         />
       </form>
     </div>
