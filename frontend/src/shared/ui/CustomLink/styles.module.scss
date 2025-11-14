@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '@/variables.scss' as *;
 
 .link {
@@ -7,7 +8,7 @@
   font-size: 14px;
 
   &:hover {
-    color: lighten($color-accent, 10%);
+    color: color.adjust($color-accent, $lightness: 10%);
   }
 
   &:focus {

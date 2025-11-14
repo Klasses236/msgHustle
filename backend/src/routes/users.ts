@@ -1,12 +1,18 @@
 import express from 'express';
-import { User } from '../models/User';
-import { users } from '../storage';
+import { prisma } from '../storage';
 
 const router = express.Router();
 
 // GET /api/users - получить всех пользователей (защищено)
-router.get('/', (req, res) => {
-  res.json(users.map(u => ({ id: u.id, username: u.username, email: u.email, createdAt: u.createdAt })));
+router.get('/', async (req, res) => {
+    try {
+        const users = await prisma.user.findMany({
+            select: { id: true, username: true, email: true, createdAt: true },
+        });
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
 });
 
 export default router;

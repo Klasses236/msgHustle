@@ -1,5 +1,3 @@
-import { Chat } from './models/Chat';
-import { User } from './models/User';
+import { PrismaClient } from '@prisma/client';
 
-export const chats: Chat[] = [];
-export const users: User[] = [];
+export const prisma = new PrismaClient();
