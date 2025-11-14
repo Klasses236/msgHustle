@@ -57,6 +57,11 @@
   }
 }
 
+.activeChat {
+  background-color: $color-primary !important;
+  color: white;
+}
+
 .sidebarBottom {
   margin-top: auto;
 }

@@ -65,6 +65,7 @@ const MainPage = () => {
   return (
     <Layout
       username={username}
+      currentChatId={chatId}
       onLogout={handleLogout}
       onJoin={handleJoin}
       onChatSelect={handleChatSelect}

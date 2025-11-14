@@ -8,6 +8,7 @@ import styles from './styles.module.scss';
 interface LayoutProps {
   children: React.ReactNode;
   username: string;
+  currentChatId?: string;
   onLogout?: () => void;
   onJoin?: (userId: string, chatId: string, username: string) => void;
   onChatSelect?: (chatId: string) => void;
@@ -16,6 +17,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({
   children,
   username,
+  currentChatId,
   onLogout,
   onJoin,
   onChatSelect,
@@ -63,7 +65,9 @@ const Layout: React.FC<LayoutProps> = ({
               chats.map((chat) => (
                 <div
                   key={chat.id}
-                  className={styles.chatItem}
+                  className={`${styles.chatItem} ${
+                    chat.id === currentChatId ? styles.activeChat : ''
+                  }`}
                   onClick={
                     onChatSelect ? () => onChatSelect(chat.id) : undefined
                   }
