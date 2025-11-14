@@ -7,16 +7,23 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   font-weight: normal;
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
 
@@ -24,7 +31,10 @@ a {
   text-decoration: none;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: inherit;
   font-size: inherit;
 }
@@ -85,7 +95,9 @@ button {
 }
 button:hover {
   border-color: #646cff;
-  box-shadow: 0 4px 15px rgba(100, 108, 255, 0.6), 0 0 30px rgba(100, 108, 255, 0.4);
+  box-shadow:
+    0 4px 15px rgba(100, 108, 255, 0.6),
+    0 0 30px rgba(100, 108, 255, 0.4);
   transform: translateY(-2px);
 }
 button:focus,
@@ -110,4 +122,3 @@ button:focus-visible {
 ::-webkit-scrollbar-thumb:hover {
   background: #666666;
 }
-

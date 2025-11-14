@@ -27,12 +27,18 @@ const LoginPage = () => {
   return (
     <div className={styles.notLoggedIn}>
       {isRegister ? (
-        <Register onRegister={handleRegister} onSwitchToLogin={handleSwitchToLogin} />
+        <Register
+          onRegister={handleRegister}
+          onSwitchToLogin={handleSwitchToLogin}
+        />
       ) : (
-        <Login onLogin={handleLogin} onSwitchToRegister={handleSwitchToRegister} />
+        <Login
+          onLogin={handleLogin}
+          onSwitchToRegister={handleSwitchToRegister}
+        />
       )}
     </div>
   );
-}
+};
 
 export default LoginPage;

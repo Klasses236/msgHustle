@@ -18,7 +18,12 @@ interface LoginFormData {
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
-  const { control, handleSubmit, formState: { errors }, trigger } = useForm<LoginFormData>();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    trigger,
+  } = useForm<LoginFormData>();
   const [login, { isLoading }] = useLoginMutation();
 
   const onSubmit = handleSubmit(async (data: LoginFormData) => {
@@ -43,16 +48,18 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
       <h1 className={styles.title}>Вход</h1>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="email">Email:</label>
+          <label className={styles.label} htmlFor="email">
+            Email:
+          </label>
           <Controller
             name="email"
             control={control}
             rules={{
-              required: "Email обязателен",
+              required: 'Email обязателен',
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Неверный формат email"
-              }
+                message: 'Неверный формат email',
+              },
             }}
             render={({ field }) => (
               <Input
@@ -69,11 +76,13 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
           />
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="password">Пароль:</label>
+          <label className={styles.label} htmlFor="password">
+            Пароль:
+          </label>
           <Controller
             name="password"
             control={control}
-            rules={{ required: "Пароль обязателен" }}
+            rules={{ required: 'Пароль обязателен' }}
             render={({ field }) => (
               <Input
                 type="password"

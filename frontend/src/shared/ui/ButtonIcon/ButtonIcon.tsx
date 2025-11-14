@@ -20,7 +20,8 @@ const ButtonIcon: React.FC<ButtonIconProps> = ({
   disabled = false,
   className,
 }) => {
-  const buttonClass = `${styles.button} ${styles[size]} ${className || ''}`.trim();
+  const buttonClass =
+    `${styles.button} ${styles[size]} ${className || ''}`.trim();
 
   return (
     <button

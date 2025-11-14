@@ -21,7 +21,13 @@ interface RegisterFormData {
 }
 
 const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
-  const { control, handleSubmit, watch, formState: { errors }, trigger } = useForm<RegisterFormData>();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    trigger,
+  } = useForm<RegisterFormData>();
   const [registerUser, { isLoading }] = useRegisterMutation();
   const password = watch('password');
 
@@ -49,11 +55,13 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
       <h1 className={styles.title}>Регистрация</h1>
       <form className={styles.form} onSubmit={onSubmit}>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="username">Имя пользователя:</label>
+          <label className={styles.label} htmlFor="username">
+            Имя пользователя:
+          </label>
           <Controller
             name="username"
             control={control}
-            rules={{ required: "Имя пользователя обязательно" }}
+            rules={{ required: 'Имя пользователя обязательно' }}
             render={({ field }) => (
               <Input
                 type="text"
@@ -69,16 +77,18 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           />
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="email">Email:</label>
+          <label className={styles.label} htmlFor="email">
+            Email:
+          </label>
           <Controller
             name="email"
             control={control}
             rules={{
-              required: "Email обязателен",
+              required: 'Email обязателен',
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Неверный формат email"
-              }
+                message: 'Неверный формат email',
+              },
             }}
             render={({ field }) => (
               <Input
@@ -95,11 +105,19 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           />
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="password">Пароль:</label>
+          <label className={styles.label} htmlFor="password">
+            Пароль:
+          </label>
           <Controller
             name="password"
             control={control}
-            rules={{ required: "Пароль обязателен", minLength: { value: 8, message: "Пароль должен быть не менее 8 символов" } }}
+            rules={{
+              required: 'Пароль обязателен',
+              minLength: {
+                value: 8,
+                message: 'Пароль должен быть не менее 8 символов',
+              },
+            }}
             render={({ field }) => (
               <Input
                 type="password"
@@ -115,13 +133,15 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           />
         </div>
         <div className={styles.field}>
-          <label className={styles.label} htmlFor="confirmPassword">Подтвердите пароль:</label>
+          <label className={styles.label} htmlFor="confirmPassword">
+            Подтвердите пароль:
+          </label>
           <Controller
             name="confirmPassword"
             control={control}
             rules={{
-              required: "Подтверждение пароля обязательно",
-              validate: value => value === password || "Пароли не совпадают"
+              required: 'Подтверждение пароля обязательно',
+              validate: (value) => value === password || 'Пароли не совпадают',
             }}
             render={({ field }) => (
               <Input
@@ -145,7 +165,9 @@ const Register: React.FC<RegisterProps> = ({ onRegister, onSwitchToLogin }) => {
           disabled={isLoading}
         />
         <div className={styles.linkContainer}>
-          <CustomLink onClick={onSwitchToLogin}>Уже есть аккаунт? Войти</CustomLink>
+          <CustomLink onClick={onSwitchToLogin}>
+            Уже есть аккаунт? Войти
+          </CustomLink>
         </div>
       </form>
     </div>

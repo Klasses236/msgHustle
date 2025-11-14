@@ -19,7 +19,9 @@ export const messagesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getMessages: builder.query<Message[], string>({
       query: (chatId) => `/messages?chatId=${encodeURIComponent(chatId)}`,
-      providesTags: (_result, _error, chatId) => [{ type: 'Messages', id: chatId }],
+      providesTags: (_result, _error, chatId) => [
+        { type: 'Messages', id: chatId },
+      ],
       async onCacheEntryAdded(
         chatId,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -27,7 +29,10 @@ export const messagesApi = apiSlice.injectEndpoints({
         try {
           await cacheDataLoaded;
 
-          const handleNewMessage = (data: { chatId: string; message: Message }) => {
+          const handleNewMessage = (data: {
+            chatId: string;
+            message: Message;
+          }) => {
             if (data.chatId === chatId) {
               updateCachedData((draft) => {
                 draft.push(data.message);
@@ -52,7 +57,9 @@ export const messagesApi = apiSlice.injectEndpoints({
         body,
       }),
       // После отправки сообщения инвалидируем кэш для getMessages
-      invalidatesTags: (_result, _error, { chatId }) => [{ type: 'Messages', id: chatId }],
+      invalidatesTags: (_result, _error, { chatId }) => [
+        { type: 'Messages', id: chatId },
+      ],
     }),
   }),
 });

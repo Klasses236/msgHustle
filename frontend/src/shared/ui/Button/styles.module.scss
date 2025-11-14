@@ -21,7 +21,8 @@
     }
 
     &:hover {
-      box-shadow: 0 4px 15px $color-red-shadow,
+      box-shadow:
+        0 4px 15px $color-red-shadow,
         0 0 30px $color-red-glow;
       transform: translateY(-2px);
     }
@@ -37,7 +38,8 @@
     }
 
     &:hover {
-      box-shadow: 0 4px 15px $color-green-shadow,
+      box-shadow:
+        0 4px 15px $color-green-shadow,
         0 0 30px $color-green-glow;
       transform: translateY(-2px);
     }
@@ -53,7 +55,8 @@
     }
 
     &:hover {
-      box-shadow: 0 4px 15px $color-blue-shadow,
+      box-shadow:
+        0 4px 15px $color-blue-shadow,
         0 0 30px $color-blue-glow;
       transform: translateY(-2px);
     }

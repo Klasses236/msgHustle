@@ -8,7 +8,12 @@ interface LinkProps {
   className?: string;
 }
 
-const CustomLink: React.FC<LinkProps> = ({ children, onClick, href, className }) => {
+const CustomLink: React.FC<LinkProps> = ({
+  children,
+  onClick,
+  href,
+  className,
+}) => {
   const handleClick = (e: React.MouseEvent) => {
     if (onClick) {
       e.preventDefault();

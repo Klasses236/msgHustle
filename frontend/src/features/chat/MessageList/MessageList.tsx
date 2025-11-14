@@ -14,7 +14,10 @@ interface MessageListProps {
   currentUserId: string;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages, currentUserId }) => {
+const MessageList: React.FC<MessageListProps> = ({
+  messages,
+  currentUserId,
+}) => {
   return (
     <div className={styles['message-list']}>
       {messages.map((message) => (
@@ -22,8 +25,12 @@ const MessageList: React.FC<MessageListProps> = ({ messages, currentUserId }) =>
           key={message.id}
           className={`${styles.message} ${message.senderId === currentUserId ? styles.sent : styles.received}`}
         >
-          <p className={styles.content}><strong>{message.senderUsername}:</strong> {message.content}</p>
-          <span className={styles.timestamp}>{new Date(message.timestamp).toLocaleTimeString()}</span>
+          <p className={styles.content}>
+            <strong>{message.senderUsername}:</strong> {message.content}
+          </p>
+          <span className={styles.timestamp}>
+            {new Date(message.timestamp).toLocaleTimeString()}
+          </span>
         </div>
       ))}
     </div>
