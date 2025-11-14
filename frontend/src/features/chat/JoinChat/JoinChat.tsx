@@ -25,13 +25,9 @@ const JoinChat: React.FC<JoinChatProps> = ({ onJoin, onClose }) => {
     formState: { errors },
   } = useForm<JoinFormData>();
   const [joinChat, { isLoading }] = useJoinChatMutation();
-  const defaultNickname = (() => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user).username : '';
-  })();
 
   const onSubmit = handleSubmit(async (data: JoinFormData) => {
-    const nickname = data.nickname.trim() || defaultNickname;
+    const nickname = data.nickname.trim();
     if (!nickname || !data.chatKey.trim()) {
       toast.error('Заполните все поля');
       return;
@@ -84,21 +80,26 @@ const JoinChat: React.FC<JoinChatProps> = ({ onJoin, onClose }) => {
         </div>
         <div className={styles.field}>
           <label className={styles.label} htmlFor="nickname">
-            Никнейм (опционально):
+            Никнейм:
           </label>
           <Controller
             name="nickname"
             control={control}
+            rules={{ required: 'Никнейм обязателен' }}
             render={({ field }) => (
               <Input
                 type="text"
                 id="nickname"
                 value={field.value || ''}
                 onChange={field.onChange}
-                placeholder={`По умолчанию: ${defaultNickname}`}
+                placeholder="Введите никнейм"
+                required
               />
             )}
           />
+          {errors.nickname && (
+            <span className={styles.error}>{errors.nickname.message}</span>
+          )}
         </div>
         <Button
           text={isLoading ? 'Присоединение...' : 'Присоединиться'}

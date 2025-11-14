@@ -98,4 +98,43 @@ router.post('/', async (req: AuthRequest, res) => {
     }
 });
 
+// DELETE /api/chats/:chatId - выйти из чата
+router.delete('/:chatId', async (req: AuthRequest, res) => {
+    const { chatId } = req.params;
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ error: 'Не авторизован' });
+    }
+
+    try {
+        const chat = await prisma.chat.findUnique({
+            where: { id: chatId },
+            include: { users: true },
+        });
+
+        if (!chat) {
+            return res.status(404).json({ error: 'Чат не найден' });
+        }
+
+        if (!chat.users.some((u) => u.id === user.id)) {
+            return res
+                .status(400)
+                .json({ error: 'Пользователь не в этом чате' });
+        }
+
+        await prisma.chat.update({
+            where: { id: chatId },
+            data: {
+                users: {
+                    disconnect: { id: user.id },
+                },
+            },
+        });
+
+        res.json({ message: 'Успешно вышли из чата' });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 export default router;

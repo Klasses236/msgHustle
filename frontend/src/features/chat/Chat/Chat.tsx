@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useGetMessagesQuery, useSendMessageMutation } from '@/app/api/messagesSlice';
+import {
+  useGetMessagesQuery,
+  useSendMessageMutation,
+} from '@/app/api/messagesSlice';
 import MessageList from '../MessageList/MessageList';
 import MessageInput from '../MessageInput/MessageInput';
 import Button from '@/shared/ui/Button';
@@ -9,10 +12,11 @@ import styles from './styles.module.scss';
 interface ChatProps {
   userId: string;
   chatId: string;
-  onLogout: () => void;
+  onLeaveChat?: () => void;
+  onLogout?: () => void;
 }
 
-const Chat: React.FC<ChatProps> = ({ userId, chatId, onLogout }) => {
+const Chat: React.FC<ChatProps> = ({ userId, chatId, onLeaveChat }) => {
   const { data: messages = [], isLoading, error } = useGetMessagesQuery(chatId);
   const [sendMessageMutation] = useSendMessageMutation();
   const [showKey, setShowKey] = useState(false);
@@ -48,7 +52,16 @@ const Chat: React.FC<ChatProps> = ({ userId, chatId, onLogout }) => {
   return (
     <div className={styles.chat}>
       <div className={styles.title}>
-        <Button text="Выйти из чата" color="blue" size="small" onClick={onLogout} />
+        <div>
+          {onLeaveChat && (
+            <Button
+              text="Покинуть чат"
+              color="blue"
+              size="small"
+              onClick={onLeaveChat}
+            />
+          )}
+        </div>
         <div>
           Ключ: {showKey ? chatId : '*******'}
           <Button

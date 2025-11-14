@@ -29,7 +29,18 @@ export const chatsApi = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Chats'],
     }),
+    leaveChat: builder.mutation<{ message: string }, string>({
+      query: (chatId) => ({
+        url: `/chats/${chatId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Chats'],
+    }),
   }),
 });
 
-export const { useGetUserChatsQuery, useJoinChatMutation } = chatsApi;
+export const {
+  useGetUserChatsQuery,
+  useJoinChatMutation,
+  useLeaveChatMutation,
+} = chatsApi;

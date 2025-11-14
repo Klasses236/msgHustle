@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({
   onChatSelect,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: chats = [], isLoading } = useGetUserChatsQuery();
+  const { data: chats = [], isLoading, error } = useGetUserChatsQuery();
 
   const handleJoinChat = () => {
     setIsModalOpen(true);
@@ -52,15 +52,19 @@ const Layout: React.FC<LayoutProps> = ({
       <div className={styles.mainContainer}>
         {/* Sidebar */}
         <aside className={styles.sidebar}>
-          <Button
-            text="Присоединиться к чату"
-            color="blue"
-            size="medium"
-            onClick={handleJoinChat}
-          />
+          {username && (
+            <Button
+              text="Присоединиться к чату"
+              color="blue"
+              size="medium"
+              onClick={handleJoinChat}
+            />
+          )}
           <div className={styles.sidebarChats}>
             {isLoading ? (
               <div>Загрузка чатов...</div>
+            ) : error ? (
+              <div>Ошибка загрузки чатов</div>
             ) : (
               chats.map((chat) => (
                 <div
