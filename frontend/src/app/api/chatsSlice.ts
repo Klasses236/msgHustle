@@ -10,16 +10,26 @@ interface JoinChatResponse {
   chatId: string;
 }
 
+interface Chat {
+  id: string;
+  name: string;
+}
+
 export const chatsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    getUserChats: builder.query<Chat[], void>({
+      query: () => '/chats',
+      providesTags: ['Chats'],
+    }),
     joinChat: builder.mutation<JoinChatResponse, JoinChatRequest>({
       query: (body) => ({
         url: '/chats',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Chats'],
     }),
   }),
 });
 
-export const { useJoinChatMutation } = chatsApi;
+export const { useGetUserChatsQuery, useJoinChatMutation } = chatsApi;

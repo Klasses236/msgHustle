@@ -1,5 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { BaseQueryFn, FetchArgs, FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import type {
+  BaseQueryFn,
+  FetchArgs,
+  FetchBaseQueryError,
+} from '@reduxjs/toolkit/query/react';
 import { Mutex } from 'async-mutex';
 
 const mutex = new Mutex();
@@ -15,7 +19,11 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (args, api, extraOptions) => {
+const baseQueryWithReauth: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
   await mutex.waitForUnlock();
   let result = await baseQuery(args, api, extraOptions);
   if (result.error && result.error.status === 401) {
@@ -39,7 +47,9 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
             extraOptions
           );
           if (refreshResult.data) {
-            const { accessToken } = refreshResult.data as { accessToken: string };
+            const { accessToken } = refreshResult.data as {
+              accessToken: string;
+            };
             localStorage.setItem('accessToken', accessToken);
             result = await baseQuery(args, api, extraOptions);
           } else {
@@ -70,6 +80,6 @@ const baseQueryWithReauth: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQue
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: baseQueryWithReauth,
-  tagTypes: ['Messages'],
+  tagTypes: ['Messages', 'Chats'],
   endpoints: () => ({}),
 });

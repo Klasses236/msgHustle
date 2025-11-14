@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Button from '../Button/Button';
 import Modal from '../Modal';
 import JoinChat from '@/features/chat/JoinChat/JoinChat';
+import { useGetUserChatsQuery } from '@/app/api/chatsSlice';
 import styles from './styles.module.scss';
 
 interface LayoutProps {
@@ -9,6 +10,7 @@ interface LayoutProps {
   username: string;
   onLogout?: () => void;
   onJoin?: (userId: string, chatId: string, username: string) => void;
+  onChatSelect?: (chatId: string) => void;
 }
 
 const Layout: React.FC<LayoutProps> = ({
@@ -16,25 +18,10 @@ const Layout: React.FC<LayoutProps> = ({
   username,
   onLogout,
   onJoin,
+  onChatSelect,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const mockChats = [
-    { id: '1', name: 'Chat 1' },
-    { id: '2', name: 'Chat 2' },
-    { id: '3', name: 'Chat 3' },
-    { id: '4', name: 'Chat 4' },
-    { id: '5', name: 'Chat 5' },
-    { id: '7', name: 'Chat 6' },
-    { id: '8', name: 'Chat 6' },
-    { id: '9', name: 'Chat 6' },
-    { id: '61', name: 'Chat 6' },
-    { id: '62', name: 'Chat 6' },
-    { id: '63', name: 'Chat 6' },
-    { id: '64', name: 'Chat 6' },
-    { id: '65', name: 'Chat 6' },
-    { id: '66', name: 'Chat 6' },
-  ];
+  const { data: chats = [], isLoading } = useGetUserChatsQuery();
 
   const handleJoinChat = () => {
     setIsModalOpen(true);
@@ -70,11 +57,22 @@ const Layout: React.FC<LayoutProps> = ({
             onClick={handleJoinChat}
           />
           <div className={styles.sidebarChats}>
-            {mockChats.map((chat) => (
-              <div key={chat.id} className={styles.chatItem}>
-                {chat.name}
-              </div>
-            ))}
+            {isLoading ? (
+              <div>Загрузка чатов...</div>
+            ) : (
+              chats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className={styles.chatItem}
+                  onClick={
+                    onChatSelect ? () => onChatSelect(chat.id) : undefined
+                  }
+                  style={{ cursor: onChatSelect ? 'pointer' : 'default' }}
+                >
+                  {chat.name}
+                </div>
+              ))
+            )}
           </div>
           {onLogout && (
             <div className={styles.sidebarBottom}>

@@ -4,6 +4,39 @@ import { AuthRequest } from '../middleware/auth';
 
 const router = express.Router();
 
+// GET /api/chats - получить список чатов пользователя
+router.get('/', async (req: AuthRequest, res) => {
+    const user = req.user;
+    if (!user) {
+        return res.status(401).json({ error: 'Не авторизован' });
+    }
+
+    try {
+        const chats = await prisma.chat.findMany({
+            where: {
+                users: {
+                    some: {
+                        id: user.id,
+                    },
+                },
+            },
+            select: {
+                id: true,
+            },
+        });
+
+        // Для простоты используем id как name
+        const chatsWithName = chats.map((chat) => ({
+            id: chat.id,
+            name: chat.id,
+        }));
+
+        res.json(chatsWithName);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // POST /api/chats - создать или присоединиться к чату
 router.post('/', async (req: AuthRequest, res) => {
     const { username, chatKey } = req.body;
