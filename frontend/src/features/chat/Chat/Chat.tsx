@@ -17,17 +17,23 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ userId, chatId, onLeaveChat }) => {
-  const { data: messages = [], isLoading, error } = useGetMessagesQuery(chatId);
+  const {
+    data: messages = [],
+    isLoading,
+    error,
+    refetch,
+  } = useGetMessagesQuery(chatId);
   const [sendMessageMutation] = useSendMessageMutation();
   const [showKey, setShowKey] = useState(false);
 
   useEffect(() => {
     socket.emit('joinChat', chatId);
+    refetch(); // Принудительно загрузить сообщения при смене чата
 
     return () => {
       socket.emit('leaveChat', chatId);
     };
-  }, [chatId]);
+  }, [chatId, refetch]);
 
   const sendMessage = async (content: string) => {
     try {

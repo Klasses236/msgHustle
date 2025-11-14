@@ -11,19 +11,31 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  username      String    @unique
-  email         String    @unique
+  id            String      @id @default(cuid())
+  username      String      @unique
+  email         String      @unique
   passwordHash  String
-  createdAt     DateTime  @default(now())
+  createdAt     DateTime    @default(now())
   messages      Message[]
-  chats         Chat[]    @relation("ChatUsers")
+  chatUsers     ChatUser[]
 }
 
 model Chat {
-  id       String    @id @default(cuid())
-  messages Message[]
-  users    User[]    @relation("ChatUsers")
+  id        String     @id @default(cuid())
+  messages  Message[]
+  chatUsers ChatUser[]
+}
+
+model ChatUser {
+  id       String @id @default(cuid())
+  userId   String
+  chatId   String
+  nickname String
+  user     User   @relation(fields: [userId], references: [id])
+  chat     Chat   @relation(fields: [chatId], references: [id])
+
+  @@unique([userId, chatId])
+  @@unique([chatId, nickname])
 }
 
 model Message {

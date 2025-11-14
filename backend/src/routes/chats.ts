@@ -14,9 +14,9 @@ router.get('/', async (req: AuthRequest, res) => {
     try {
         const chats = await prisma.chat.findMany({
             where: {
-                users: {
+                chatUsers: {
                     some: {
-                        id: user.id,
+                        userId: user.id,
                     },
                 },
             },
@@ -55,40 +55,44 @@ router.post('/', async (req: AuthRequest, res) => {
         // Найти или создать чат
         let chat = await prisma.chat.findUnique({
             where: { id: chatKey },
-            include: { users: true },
+            include: { chatUsers: true },
         });
 
         if (!chat) {
             chat = await prisma.chat.create({
                 data: { id: chatKey },
-                include: { users: true },
+                include: { chatUsers: true },
             });
         }
 
         // Проверить, что пользователь уже в чате
-        if (chat.users.some((u) => u.id === user.id)) {
+        if (chat.chatUsers.some((cu) => cu.userId === user.id)) {
             return res
                 .status(400)
                 .json({ error: 'Пользователь уже в этом чате' });
         }
 
-        // Проверить уникальность username в чате
-        const existingUserInChat = chat.users.find(
-            (u) => u.username === username
-        );
-        if (existingUserInChat) {
+        // Проверить уникальность nickname в чате
+        const existingChatUser = await prisma.chatUser.findUnique({
+            where: {
+                chatId_nickname: {
+                    chatId: chatKey,
+                    nickname: username,
+                },
+            },
+        });
+        if (existingChatUser) {
             return res
                 .status(400)
                 .json({ error: 'Имя пользователя уже существует в этом чате' });
         }
 
-        // Добавить пользователя в чат
-        await prisma.chat.update({
-            where: { id: chatKey },
+        // Добавить пользователя в чат с nickname
+        await prisma.chatUser.create({
             data: {
-                users: {
-                    connect: { id: user.id },
-                },
+                userId: user.id,
+                chatId: chatKey,
+                nickname: username,
             },
         });
 
@@ -107,26 +111,26 @@ router.delete('/:chatId', async (req: AuthRequest, res) => {
     }
 
     try {
-        const chat = await prisma.chat.findUnique({
-            where: { id: chatId },
-            include: { users: true },
+        const chatUser = await prisma.chatUser.findUnique({
+            where: {
+                userId_chatId: {
+                    userId: user.id,
+                    chatId: chatId,
+                },
+            },
         });
 
-        if (!chat) {
-            return res.status(404).json({ error: 'Чат не найден' });
-        }
-
-        if (!chat.users.some((u) => u.id === user.id)) {
+        if (!chatUser) {
             return res
                 .status(400)
                 .json({ error: 'Пользователь не в этом чате' });
         }
 
-        await prisma.chat.update({
-            where: { id: chatId },
-            data: {
-                users: {
-                    disconnect: { id: user.id },
+        await prisma.chatUser.delete({
+            where: {
+                userId_chatId: {
+                    userId: user.id,
+                    chatId: chatId,
                 },
             },
         });
