@@ -9,6 +9,17 @@ interface Message {
   timestamp: string;
 }
 
+interface GetMessagesResponse {
+  items: Message[];
+  totalCount: number;
+}
+
+interface GetMessagesRequest {
+  chatId: string;
+  offset?: number;
+  limit?: number;
+}
+
 interface SendMessageRequest {
   chatId: string;
   senderId: string;
@@ -17,13 +28,33 @@ interface SendMessageRequest {
 
 export const messagesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getMessages: builder.query<Message[], string>({
-      query: (chatId) => `/messages?chatId=${encodeURIComponent(chatId)}`,
-      providesTags: (_result, _error, chatId) => [
+    getMessages: builder.query<GetMessagesResponse, GetMessagesRequest>({
+      query: ({ chatId, offset = 0, limit = 50 }) => {
+        const params = new URLSearchParams({
+          chatId,
+          offset: offset.toString(),
+          limit: limit.toString(),
+        });
+        return `/messages?${params.toString()}`;
+      },
+      providesTags: (_result, _error, { chatId }) => [
         { type: 'Messages', id: chatId },
       ],
+      serializeQueryArgs: ({ queryArgs }) => {
+        return { chatId: queryArgs.chatId };
+      },
+      merge: (currentCache, newItems, { arg }) => {
+        if ((arg.offset ?? 0) > 0) {
+          // Добавляем старые сообщения в начало
+          currentCache.items.unshift(...newItems.items);
+        } else {
+          // Заменяем для начальной загрузки
+          return newItems;
+        }
+      },
+      transformResponse: (response: GetMessagesResponse) => response,
       async onCacheEntryAdded(
-        chatId,
+        { chatId },
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         try {
@@ -35,7 +66,7 @@ export const messagesApi = apiSlice.injectEndpoints({
           }) => {
             if (data.chatId === chatId) {
               updateCachedData((draft) => {
-                draft.push(data.message);
+                draft.items.push(data.message); // Новые сообщения в конец
               });
             }
           };
@@ -56,12 +87,13 @@ export const messagesApi = apiSlice.injectEndpoints({
         method: 'POST',
         body,
       }),
-      // После отправки сообщения инвалидируем кэш для getMessages
-      invalidatesTags: (_result, _error, { chatId }) => [
-        { type: 'Messages', id: chatId },
-      ],
+      // Кэш обновляется через socket, инвалидация не нужна
     }),
   }),
 });
 
-export const { useGetMessagesQuery, useSendMessageMutation } = messagesApi;
+export const {
+  useGetMessagesQuery,
+  useLazyGetMessagesQuery,
+  useSendMessageMutation,
+} = messagesApi;

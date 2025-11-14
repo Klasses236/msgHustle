@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './styles.module.scss';
 
 interface Message {
@@ -12,14 +12,65 @@ interface Message {
 interface MessageListProps {
   messages: Message[];
   currentUserId: string;
+  onLoadMore?: () => void;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
 }
 
 const MessageList: React.FC<MessageListProps> = ({
   messages,
   currentUserId,
+  onLoadMore,
+  hasMore = false,
+  isLoadingMore = false,
 }) => {
+  const listRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [isAtTop, setIsAtTop] = useState(false);
+
+  useEffect(() => {
+    if (!sentinelRef.current || !onLoadMore || !hasMore || isLoadingMore)
+      return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && hasMore && !isLoadingMore) {
+          onLoadMore();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(sentinelRef.current);
+
+    return () => observer.disconnect();
+  }, [onLoadMore, hasMore, isLoadingMore]);
+
+  // Автопрокрутка вниз при новых сообщениях
+  useEffect(() => {
+    if (listRef.current && !isAtTop && !isLoadingMore) {
+      listRef.current.scrollTop = listRef.current.scrollHeight;
+    }
+  }, [messages, isAtTop, isLoadingMore]);
+
+  const handleScroll = () => {
+    if (listRef.current) {
+      const { scrollTop } = listRef.current;
+      setIsAtTop(scrollTop === 0);
+    }
+  };
+
   return (
-    <div className={styles['message-list']}>
+    <div
+      ref={listRef}
+      className={styles['message-list']}
+      onScroll={handleScroll}
+    >
+      {isLoadingMore && (
+        <div className={styles['loading-more']}>Загрузка...</div>
+      )}
+      <div ref={sentinelRef} className={styles.sentinel} />
       {messages.map((message) => (
         <div
           key={message.id}

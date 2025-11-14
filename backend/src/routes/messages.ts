@@ -4,21 +4,40 @@ import { io } from '../server';
 
 const router = express.Router();
 
-// GET /api/messages?chatId=... - получить сообщения для чата
+// GET /api/messages?chatId=...&offset=...&limit=... - получить сообщения для чата с пагинацией
 router.get('/', async (req, res) => {
-  const { chatId } = req.query;
+  const { chatId, offset = '0', limit = '50' } = req.query;
   if (!chatId || typeof chatId !== 'string') {
     return res.status(400).json({ error: 'chatId обязателен' });
+  }
+  const offsetNum = parseInt(offset as string, 10);
+  const limitNum = parseInt(limit as string, 10);
+  if (isNaN(offsetNum) || offsetNum < 0) {
+    return res.status(400).json({ error: 'offset должен быть числом >= 0' });
+  }
+  if (isNaN(limitNum) || limitNum <= 0 || limitNum > 100) {
+    return res
+      .status(400)
+      .json({ error: 'limit должен быть числом от 1 до 100' });
   }
   try {
     const chat = await prisma.chat.findUnique({
       where: { id: chatId },
-      include: { messages: { include: { sender: true } } },
     });
     if (!chat) {
       return res.status(404).json({ error: 'Чат не найден' });
     }
-    res.json(chat.messages);
+    const totalCount = await prisma.message.count({
+      where: { chatId },
+    });
+    const messages = await prisma.message.findMany({
+      where: { chatId },
+      include: { sender: true },
+      orderBy: { timestamp: 'desc' },
+      take: limitNum,
+      skip: offsetNum,
+    });
+    res.json({ items: messages.reverse(), totalCount });
   } catch (error) {
     res.status(500).json({ error: 'Internal server error' });
   }

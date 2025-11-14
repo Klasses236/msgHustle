@@ -1,6 +1,7 @@
 @use '@/variables.scss' as *;
 
 .message-list {
+  position: relative;
   flex: 1;
   overflow-y: auto;
   border: 1px solid $color-border;
@@ -9,29 +10,31 @@
 }
 
 .message {
-  margin-bottom: $spacing-sm;
   padding: $spacing-sm $spacing-md;
   border-radius: 8px;
   min-width: clamp(200px, 50vw, 300px);
   max-width: 70%;
   width: fit-content;
+  margin-bottom: $spacing-sm;
 
   &.sent {
     background-color: $color-sent-message;
     color: $color-text;
-    margin-left: auto;
     text-align: right;
+    margin-left: auto;
     box-shadow: 0 2px 4px $color-shadow;
   }
 
   &.received {
     background-color: $color-received-message;
     color: $color-text;
+    margin-right: auto;
     box-shadow: 0 2px 4px $color-shadow;
   }
 
   .content {
-    // No specific styles, but class added for consistency
+    word-wrap: break-word;
+    white-space: pre-wrap;
   }
 
   .timestamp {
@@ -39,4 +42,16 @@
     color: $color-timestamp;
     margin-top: $spacing-xs;
   }
+}
+
+.sentinel {
+  height: 10px;
+  background: transparent;
+}
+
+.loading-more {
+  text-align: center;
+  padding: $spacing-sm;
+  color: $color-muted-text;
+  font-size: 0.9em;
 }

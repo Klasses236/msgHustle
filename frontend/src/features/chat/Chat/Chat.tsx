@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   useGetMessagesQuery,
+  useLazyGetMessagesQuery,
   useSendMessageMutation,
 } from '@/app/api/messagesSlice';
 import MessageList from '../MessageList/MessageList';
@@ -17,23 +18,47 @@ interface ChatProps {
 }
 
 const Chat: React.FC<ChatProps> = ({ userId, chatId, onLeaveChat }) => {
-  const {
-    data: messages = [],
-    isLoading,
-    error,
-    refetch,
-  } = useGetMessagesQuery(chatId);
+  const { data, isLoading, error } = useGetMessagesQuery({
+    chatId,
+    offset: 0,
+    limit: 50,
+  });
+  const messages = data?.items || [];
+  const totalCount = data?.totalCount || 0;
+  const [loadMoreTrigger, { isFetching: isLoadingMore }] =
+    useLazyGetMessagesQuery();
   const [sendMessageMutation] = useSendMessageMutation();
   const [showKey, setShowKey] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    setHasMore(messages.length < totalCount);
+  }, [messages.length, totalCount]);
 
   useEffect(() => {
     socket.emit('joinChat', chatId);
-    refetch(); // Принудительно загрузить сообщения при смене чата
+    setHasMore(true); // Сброс при смене чата
 
     return () => {
       socket.emit('leaveChat', chatId);
     };
-  }, [chatId, refetch]);
+  }, [chatId]);
+
+  const loadMore = async () => {
+    if (!hasMore || isLoadingMore || messages.length === 0) return;
+    try {
+      const result = await loadMoreTrigger({
+        chatId,
+        offset: messages.length,
+        limit: 50,
+      }).unwrap();
+      if (result.items.length < 50) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error('Error loading more messages:', error);
+    }
+  };
 
   const sendMessage = async (content: string) => {
     try {
@@ -79,7 +104,13 @@ const Chat: React.FC<ChatProps> = ({ userId, chatId, onLeaveChat }) => {
           />
         </div>
       </div>
-      <MessageList messages={messages} currentUserId={userId} />
+      <MessageList
+        messages={messages}
+        currentUserId={userId}
+        onLoadMore={loadMore}
+        hasMore={hasMore}
+        isLoadingMore={isLoadingMore}
+      />
       <MessageInput onSendMessage={sendMessage} />
     </div>
   );
