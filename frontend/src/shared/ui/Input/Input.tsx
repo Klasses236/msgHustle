@@ -6,13 +6,16 @@ interface InputProps {
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onKeyDown?: (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   onBlur?: () => void;
   className?: string;
   id?: string;
   required?: boolean;
   disabled?: boolean;
   error?: string;
+  canHaveError?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -27,12 +30,16 @@ const Input: React.FC<InputProps> = ({
   required,
   disabled,
   error,
+  canHaveError = true,
 }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     onChange(e.target.value);
   };
 
-  const inputClass = `${styles.input} ${type === 'textarea' ? styles.textarea : ''} ${error ? styles.error : ''} ${className || ''}`.trim();
+  const inputClass =
+    `${styles.input} ${type === 'textarea' ? styles.textarea : ''} ${error ? styles.error : ''} ${className || ''}`.trim();
 
   const commonProps = {
     className: inputClass,
@@ -46,12 +53,17 @@ const Input: React.FC<InputProps> = ({
     disabled,
   };
 
-  const inputElement = type === 'textarea' ? <textarea {...commonProps} /> : <input {...commonProps} type={type} />;
+  const inputElement =
+    type === 'textarea' ? (
+      <textarea {...commonProps} />
+    ) : (
+      <input {...commonProps} type={type} />
+    );
 
   return (
     <div className={styles.wrapper}>
       {inputElement}
-      <span className={styles.errorText}>{error || ''}</span>
+      {canHaveError && <span className={styles.errorText}>{error || ''}</span>}
     </div>
   );
 };

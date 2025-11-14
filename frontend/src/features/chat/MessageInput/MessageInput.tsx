@@ -22,7 +22,9 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
     }
   });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       onSubmit();
@@ -42,6 +44,7 @@ const MessageInput: React.FC<MessageInputProps> = ({ onSendMessage }) => {
             onKeyDown={handleKeyDown}
             placeholder="Введите сообщение..."
             className={styles.textarea}
+            canHaveError={false}
           />
         )}
       />

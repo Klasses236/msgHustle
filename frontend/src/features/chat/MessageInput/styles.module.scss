@@ -4,7 +4,8 @@
   display: flex;
   gap: $spacing-sm;
   align-items: center;
-  padding: $spacing-responsive-sm;
+  padding: $spacing-responsive-sm 0;
+  width: 100%;
 
   .textarea {
     flex: 1;
