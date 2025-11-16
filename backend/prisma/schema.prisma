@@ -11,13 +11,14 @@ datasource db {
 }
 
 model User {
-  id            String      @id @default(cuid())
-  username      String      @unique
-  email         String      @unique
+  id            String         @id @default(cuid())
+  username      String         @unique
+  email         String         @unique
   passwordHash  String
-  createdAt     DateTime    @default(now())
+  createdAt     DateTime       @default(now())
   messages      Message[]
   chatUsers     ChatUser[]
+  refreshTokens RefreshToken[]
 }
 
 model Chat {
@@ -47,4 +48,15 @@ model Message {
   chatId         String
   chat           Chat     @relation(fields: [chatId], references: [id])
   sender         User     @relation(fields: [senderId], references: [id])
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
 }

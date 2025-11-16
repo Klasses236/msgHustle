@@ -44,11 +44,7 @@ router.post('/register', async (req, res) => {
       username: newUser.username,
       email: newUser.email,
     });
-    const refreshToken = generateRefreshToken({
-      id: newUser.id,
-      username: newUser.username,
-      email: newUser.email,
-    });
+    const refreshToken = await generateRefreshToken(newUser.id);
     res.status(201).json({
       user: { id: newUser.id, username, email },
       accessToken,
@@ -77,11 +73,7 @@ router.post('/login', async (req, res) => {
       username: user.username,
       email: user.email,
     });
-    const refreshToken = generateRefreshToken({
-      id: user.id,
-      username: user.username,
-      email: user.email,
-    });
+    const refreshToken = await generateRefreshToken(user.id);
     res.json({
       user: { id: user.id, username: user.username, email: user.email },
       accessToken,
@@ -93,15 +85,16 @@ router.post('/login', async (req, res) => {
 });
 
 // POST /api/auth/refresh - обновить access token
-router.post('/refresh', (req, res) => {
+router.post('/refresh', async (req, res) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
     return res.status(401).json({ error: 'Refresh token required' });
   }
   try {
-    const user = verifyRefreshToken(refreshToken);
+    const user = await verifyRefreshToken(refreshToken);
     const newAccessToken = generateAccessToken(user);
-    res.json({ accessToken: newAccessToken });
+    const newRefreshToken = await generateRefreshToken(user.id);
+    res.json({ accessToken: newAccessToken, refreshToken: newRefreshToken });
   } catch (err) {
     res.status(403).json({ error: 'Invalid refresh token' });
   }

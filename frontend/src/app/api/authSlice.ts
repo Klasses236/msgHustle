@@ -27,6 +27,7 @@ interface AuthResponse {
 
 interface RefreshResponse {
   accessToken: string;
+  refreshToken: string;
 }
 
 export const authSlice = apiSlice.injectEndpoints({

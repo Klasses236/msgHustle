@@ -47,10 +47,12 @@ const baseQueryWithReauth: BaseQueryFn<
             extraOptions
           );
           if (refreshResult.data) {
-            const { accessToken } = refreshResult.data as {
+            const { accessToken, refreshToken } = refreshResult.data as {
               accessToken: string;
+              refreshToken: string;
             };
             localStorage.setItem('accessToken', accessToken);
+            localStorage.setItem('refreshToken', refreshToken);
             result = await baseQuery(args, api, extraOptions);
           } else {
             // Refresh failed, logout
