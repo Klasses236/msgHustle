@@ -26,7 +26,8 @@ const MessageList: React.FC<MessageListProps> = ({
 }) => {
   const listRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-  const [isAtTop, setIsAtTop] = useState(false);
+  const previousScrollHeightRef = useRef<number | null>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
 
   useEffect(() => {
     if (!sentinelRef.current || !onLoadMore || !hasMore || isLoadingMore)
@@ -36,6 +37,9 @@ const MessageList: React.FC<MessageListProps> = ({
       (entries) => {
         const [entry] = entries;
         if (entry.isIntersecting && hasMore && !isLoadingMore) {
+          if (listRef.current) {
+            previousScrollHeightRef.current = listRef.current.scrollHeight;
+          }
           onLoadMore();
         }
       },
@@ -47,17 +51,27 @@ const MessageList: React.FC<MessageListProps> = ({
     return () => observer.disconnect();
   }, [onLoadMore, hasMore, isLoadingMore]);
 
-  // Автопрокрутка вниз при новых сообщениях
+  // Корректировка скролла после загрузки больше сообщений
   useEffect(() => {
-    if (listRef.current && !isAtTop && !isLoadingMore) {
+    if (listRef.current && previousScrollHeightRef.current !== null) {
+      const delta =
+        listRef.current.scrollHeight - previousScrollHeightRef.current;
+      listRef.current.scrollTop += delta;
+      previousScrollHeightRef.current = null;
+    }
+  }, [messages]);
+
+  // Прокрутка вниз при новых сообщениях, если пользователь внизу
+  useEffect(() => {
+    if (listRef.current && isAtBottom && !isLoadingMore) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-  }, [messages, isAtTop, isLoadingMore]);
+  }, [messages, isAtBottom, isLoadingMore]);
 
   const handleScroll = () => {
     if (listRef.current) {
-      const { scrollTop } = listRef.current;
-      setIsAtTop(scrollTop === 0);
+      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+      setIsAtBottom(scrollTop + clientHeight >= scrollHeight - 10);
     }
   };
 
